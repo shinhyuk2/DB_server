@@ -1,6 +1,6 @@
 # DB_server
 인하대학교 데이터베이스 프로젝트 백엔드
-# Baseball Mate Backend
+# SSG Landers Talk
 
 ## 프로젝트 소개
 Baseball Mate는 야구 직관을 함께할 동행자를 찾고, 경기 관련 이야기를 피드에 공유하며, 매칭된 사용자 간 메시지를 주고받을 수 있는 서비스입니다.
