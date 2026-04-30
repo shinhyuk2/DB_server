@@ -14,31 +14,21 @@ Baseball Mate는 야구 직관을 함께할 동행자를 찾고, 경기 관련 �
 ### 1. 홈 피드
 사용자가 야구 직관 및 관련 이야기를 자유롭게 공유할 수 있는 공간입니다.
 
-- 게시물 작성 및 조회
-- 해시태그 등록 및 연결
-- 댓글 작성 및 조회
-- 좋아요 기능
-- 게시물 이미지 첨부
+* 직관 인증, 야구장 리뷰 등 실시간 텍스트 및 이미지 포스팅
+* 해시태그 기반 게시물 필터링 및 검색
+* 무한 뎁스(Depth) 확장이 가능한 대댓글(순환 관계 모델링 적용) 기능
 
 ### 2. 직관 동행 매칭
 사용자가 특정 경기 일정을 선택하고, 매칭을 신청하여 직관 동행자를 찾을 수 있는 기능입니다.
 
-- 구단 정보 조회
-- 경기 일정 조회
-- 경기별 매칭 신청
-- 신청 상태 관리
-- 경기 기준 매칭 생성
-- 매칭 구성원 관리
+* 구단 및 경기 일정 데이터 제공
+* 사용자 정보(성별, 나이, MBTI) 기반 조건부 동행 매칭
+* 다대다(N:M) 관계인 유저와 경기 일정을 `매칭_신청` 테이블로 분리하여 안정적인 매칭 트랜잭션 처리
 
 ### 3. 다이렉트 메시지
-매칭된 사용자 간 자유롭게 소통할 수 있는 채팅 기능입니다.
 
-- 채팅방 생성
-- 채팅방 참여자 관리
-- 메시지 전송 및 조회
-- 시스템 메시지 지원
-- 이미지 메시지 지원
-- 읽음 여부 관리
+* 매칭이 성사된 사용자 간의 1:1 또는 그룹 채팅방 자동 생성
+* 메시지 송수신 및 읽음 여부 상태 관리
 
 ---
 
@@ -65,7 +55,7 @@ Baseball Mate는 야구 직관을 함께할 동행자를 찾고, 경기 관련 �
 - **Hibernate**
 
 ### Database
-- **MySQL**
+- **PostgreSQL**
 
 ### Build / DevOps
 - **Gradle**
@@ -81,160 +71,13 @@ Baseball Mate는 야구 직관을 함께할 동행자를 찾고, 경기 관련 �
 
 ## DB 연동 방식
 
-본 프로젝트는 **Spring Boot + Spring Data JPA + MySQL** 구조로 데이터베이스를 연동합니다.
+본 프로젝트는 **Spring Boot + Spring Data JPA + PostgreSQL** 구조로 데이터베이스를 연동합니다.
 
 - **Spring Data JPA**를 사용하여 엔티티와 데이터베이스 테이블을 매핑합니다.
 - **Hibernate**를 JPA 구현체로 사용하여 ORM 기반으로 데이터를 관리합니다.
 - 각 도메인별로 `Entity`, `Repository`, `Service`, `Controller` 계층을 분리하여 구현합니다.
 - MySQL에 저장된 사용자, 게시물, 경기, 매칭, 채팅 데이터를 JPA Repository를 통해 조회/저장/수정합니다.
 - 향후 필요 시 `@Query`, JPQL, Query Method를 활용하여 복잡한 조회 기능을 확장할 수 있습니다.
-
-### 계층 구조 예시
-- **Controller**: 클라이언트 요청 처리
-- **Service**: 비즈니스 로직 처리
-- **Repository**: DB 접근
-- **Entity**: 테이블 매핑 객체
-- **DTO**: 요청/응답 데이터 전달 객체
-
----
-
-## ERD 기반 주요 테이블
-
-### 1. Users
-사용자 정보를 저장하는 테이블입니다.
-
-- `user_id`
-- `email`
-- `password`
-- `nickname`
-- `gender`
-- `birth_year`
-- `mbti`
-- `favorite_team`
-- `profile_image_url`
-- `created_at`
-- `updated_at`
-
-### 2. team information
-구단 정보를 저장하는 테이블입니다.
-
-- `team_id`
-- `team_name`
-- `region`
-- `stadium`
-- `team_emblem`
-
-### 3. games
-경기 일정을 저장하는 테이블입니다.
-
-- `game_id`
-- `home_team_id`
-- `away_team_id`
-- `game_date`
-
-### 4. match_applications
-사용자의 직관 동행 신청 정보를 저장하는 테이블입니다.
-
-- `application`
-- `game_id`
-- `user_id`
-- `application_status`
-- `applied_at`
-
-### 5. matches
-매칭 결과 정보를 저장하는 테이블입니다.
-
-- `match_id`
-- `game_id`
-- `matched_at`
-- `match_status`
-
-### 6. match_member
-매칭에 포함된 사용자 정보를 저장하는 테이블입니다.
-
-- `member_id`
-- `match_id`
-- `user_id`
-
-### 7. Posts
-피드 게시물 정보를 저장하는 테이블입니다.
-
-- `post_id`
-- `user_id`
-- `post_title`
-- `content`
-- `created_at`
-- `updated_at`
-
-### 8. Hashtags
-해시태그 정보를 저장하는 테이블입니다.
-
-- `hashtag_id`
-- `tag_name`
-
-### 9. post_hashtags
-게시물과 해시태그의 다대다 관계를 저장하는 테이블입니다.
-
-- `post_hashtag_id`
-- `post_id`
-- `hashtag_id`
-
-### 10. Comment
-게시물 댓글 정보를 저장하는 테이블입니다.
-
-- `comment_id`
-- `post_id`
-- `post_user_id`
-- `comment_users`
-- `comment`
-- `write_date`
-- `delete_date`
-
-### 11. Like
-게시물 좋아요 정보를 저장하는 테이블입니다.
-
-- `like_id`
-- `post_id`
-- `click_person_id`
-- `create_date`
-- `delete_date`
-
-### 12. Image_comment
-게시물 이미지 정보를 저장하는 테이블입니다.
-
-- `post_image_id`
-- `post_id`
-- `post_user_id`
-- `image`
-- `write_date`
-- `delete_date`
-
-### 13. chat_rooms
-채팅방 정보를 저장하는 테이블입니다.
-
-- `chat_room_id`
-- `match_id`
-- `created_at`
-
-### 14. chat_room_members
-채팅방 참여자 정보를 저장하는 테이블입니다.
-
-- `chat_room_member_id`
-- `chat_room_id`
-- `user_id`
-- `joined_at`
-
-### 15. messages
-채팅 메시지를 저장하는 테이블입니다.
-
-- `message_id`
-- `chat_room_id`
-- `sender_id`
-- `message_type`
-- `content`
-- `image_url`
-- `is_read`
-- `sent_at`
 
 ---
 
@@ -290,21 +133,14 @@ Baseball Mate는 야구 직관을 함께할 동행자를 찾고, 경기 관련 �
 - `POST /chat-rooms/{chatRoomId}/messages` : 메시지 전송
 
 ---
+## Commit Convention
+| 타입 | 설명 |
+|-|-|
+| **feat** | 새로운 기능 추가 |
+| **fix** | 버그 수정 |
+| **docs** | 문서 수정 (README, 주석, 가이드 등) |
+| **style** | 코드 포맷팅, 세미콜론 누락, 오타 수정 (로직 변경 없음) |
+| **refactor** | 코드 리팩토링 (기능 변경 없이 구조만 개선) |
+| **test** | 테스트 코드 추가/수정 |
+| **chore** | 빌드 설정, 패키지 매니저 설정, 라이브러리 추가 (코드 변경 없음) |
 
-## 프로젝트 구조
-
-```bash
-src
- ┣ main
- ┃ ┣ java
- ┃ ┃ ┗ com.example.baseballmate
- ┃ ┃   ┣ controller
- ┃ ┃   ┣ service
- ┃ ┃   ┣ repository
- ┃ ┃   ┣ domain
- ┃ ┃   ┣ dto
- ┃ ┃   ┗ config
- ┃ ┗ resources
- ┃   ┣ application.yml
- ┃   ┗ static
- ┗ test
