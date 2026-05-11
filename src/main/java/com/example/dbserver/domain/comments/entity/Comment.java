@@ -3,10 +3,16 @@ package com.example.dbserver.domain.comments.entity;
 import com.example.dbserver.domain.posts.entity.Post;
 import com.example.dbserver.domain.users.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "comments")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
 
     @Id
@@ -25,7 +31,7 @@ public class Comment {
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "created_At", nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "deleted_at")
@@ -35,9 +41,6 @@ public class Comment {
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
-    protected Comment() {
-    }
-
     public Comment(Post post, User user, String comment, Comment parentComment) {
         this.post = post;
         this.user = user;
@@ -45,34 +48,6 @@ public class Comment {
         this.parentComment = parentComment;
         this.createdAt = LocalDateTime.now();
         this.deletedAt = null;
-    }
-
-    public Long getCommentId() {
-        return commentId;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    public Comment getParentComment() {
-        return parentComment;
     }
 
     public void updateComment(String comment) {

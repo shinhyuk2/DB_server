@@ -3,9 +3,14 @@ package com.example.dbserver.domain.posts.entity.mapping;
 import com.example.dbserver.domain.hashtags.entity.Hashtag;
 import com.example.dbserver.domain.posts.entity.Post;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "post_hashtags")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostHashtag {
 
     @Id
@@ -21,23 +26,8 @@ public class PostHashtag {
     @JoinColumn(name = "hashtag_id", nullable = false)
     private Hashtag hashtag;
 
-    protected PostHashtag() {
-    }
-
     public PostHashtag(Post post, Hashtag hashtag) {
         this.post = post;
         this.hashtag = hashtag;
-    }
-
-    public Long getPostHashtagId() {
-        return postHashtagId;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public Hashtag getHashtag() {
-        return hashtag;
     }
 }

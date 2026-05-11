@@ -3,10 +3,16 @@ package com.example.dbserver.domain.likes.entity;
 import com.example.dbserver.domain.posts.entity.Post;
 import com.example.dbserver.domain.users.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "likes")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like {
 
     @Id
@@ -28,34 +34,11 @@ public class Like {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    protected Like() {
-    }
-
     public Like(Post post, User user) {
         this.post = post;
         this.user = user;
         this.createdAt = LocalDateTime.now();
         this.deletedAt = null;
-    }
-
-    public Long getLikeId() {
-        return likeId;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
     }
 
     public void delete() {

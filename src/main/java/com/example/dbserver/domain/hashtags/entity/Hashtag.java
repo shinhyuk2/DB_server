@@ -1,9 +1,14 @@
 package com.example.dbserver.domain.hashtags.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name = "hashtags")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Hashtag {
 
     @Id
@@ -14,18 +19,7 @@ public class Hashtag {
     @Column(name = "tag_name", nullable = false)
     private String tagName;
 
-    protected Hashtag() {
-    }
-
     public Hashtag(String tagName) {
         this.tagName = tagName;
-    }
-
-    public Long getHashtagId() {
-        return hashtagId;
-    }
-
-    public String getTagName() {
-        return tagName;
     }
 }
