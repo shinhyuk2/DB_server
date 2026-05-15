@@ -59,6 +59,15 @@ public class Post {
         this.commentCount++;
     }
 
+    public void decreaseCommentCount() {
+        if (this.commentCount == null || this.commentCount <= 0) {
+            this.commentCount = 0L;
+            return;
+        }
+
+        this.commentCount--;
+    }
+
     public void increaseLikeCount() {
         if (this.likeCount == null) {
             this.likeCount = 0L;

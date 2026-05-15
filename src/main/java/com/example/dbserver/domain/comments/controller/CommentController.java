@@ -36,14 +36,15 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestBody CommentRequestDto requestDto
     ) {
-        return commentService.updateComment(commentId, requestDto);
+        return commentService.updateComment(postId, commentId, requestDto);
     }
 
     @DeleteMapping("/{commentId}")
     public void deleteComment(
             @PathVariable Long postId,
-            @PathVariable Long commentId
+            @PathVariable Long commentId,
+            @RequestParam Long userId
     ) {
-        commentService.deleteComment(commentId);
+        commentService.deleteComment(postId, commentId, userId);
     }
 }

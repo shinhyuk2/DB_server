@@ -19,6 +19,7 @@ public class PostConverter {
                 post.getPostId(),
                 post.getUser().getUserId(),
                 post.getUser().getNickname(),
+                post.getUser().getProfileImageUrl(),
                 post.getContent(),
                 post.getLikeCount(),
                 post.getCommentCount(),

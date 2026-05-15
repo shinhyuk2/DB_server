@@ -18,8 +18,13 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostResponseDto> getPosts() {
-        return postService.getPosts();
+    public List<PostResponseDto> getPosts(
+            @RequestParam(required = false, defaultValue = "latest") String sort,
+            @RequestParam(required = false) String hashtag,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return postService.getPosts(sort, hashtag, page, size);
     }
 
     @GetMapping("/{postId}")

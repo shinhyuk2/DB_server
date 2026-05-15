@@ -13,6 +13,8 @@ import com.example.dbserver.domain.posts.repository.PostImageRepository;
 import com.example.dbserver.domain.posts.repository.PostRepository;
 import com.example.dbserver.domain.users.entity.User;
 import com.example.dbserver.domain.users.repository.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +44,24 @@ public class PostService {
         this.hashtagRepository = hashtagRepository;
     }
 
-    public List<PostResponseDto> getPosts() {
-        List<Post> posts = postRepository.findByDeletedAtIsNull();
+    public List<PostResponseDto> getPosts(String sort, String hashtag, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<Post> posts;
+
+        if (hashtag != null && !hashtag.isBlank()) {
+            if ("popular".equals(sort)) {
+                posts = postRepository.findByHashtagOrderByLikeCount(hashtag, pageable);
+            } else {
+                posts = postRepository.findByHashtagOrderByCreatedAt(hashtag, pageable);
+            }
+        } else {
+            if ("popular".equals(sort)) {
+                posts = postRepository.findAllOrderByLikeCount(pageable);
+            } else {
+                posts = postRepository.findAllOrderByCreatedAt(pageable);
+            }
+        }
 
         return posts.stream()
                 .map(this::toPostResponseDto)

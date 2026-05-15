@@ -53,6 +53,10 @@ public class CommentService {
         if (requestDto.getParentCommentId() != null) {
             parentComment = commentRepository.findByCommentIdAndDeletedAtIsNull(requestDto.getParentCommentId())
                     .orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다."));
+
+            if (!parentComment.getPost().getPostId().equals(postId)) {
+                throw new IllegalArgumentException("해당 게시글의 댓글이 아닙니다.");
+            }
         }
 
         Comment comment = new Comment(
@@ -70,9 +74,12 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(Long commentId, CommentRequestDto requestDto) {
+    public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto) {
         Comment comment = commentRepository.findByCommentIdAndDeletedAtIsNull(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        validateCommentBelongsToPost(comment, postId);
+        validateCommentOwner(comment, requestDto.getUserId());
 
         comment.updateComment(requestDto.getComment());
 
@@ -80,10 +87,26 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long postId, Long commentId, Long userId) {
         Comment comment = commentRepository.findByCommentIdAndDeletedAtIsNull(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
+        validateCommentBelongsToPost(comment, postId);
+        validateCommentOwner(comment, userId);
+
         comment.delete();
+        comment.getPost().decreaseCommentCount();
+    }
+
+    private void validateCommentBelongsToPost(Comment comment, Long postId) {
+        if (!comment.getPost().getPostId().equals(postId)) {
+            throw new IllegalArgumentException("해당 게시글의 댓글이 아닙니다.");
+        }
+    }
+
+    private void validateCommentOwner(Comment comment, Long userId) {
+        if (!comment.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("댓글 작성자만 수정/삭제할 수 있습니다.");
+        }
     }
 }

@@ -13,6 +13,7 @@ public class PostResponseDto {
     private Long postId;
     private Long userId;
     private String nickname;
+    private String profileImageUrl;
     private String content;
     private Long likeCount;
     private Long commentCount;

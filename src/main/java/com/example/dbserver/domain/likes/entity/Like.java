@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-@Entity
+@Entity(name = "PostLike") //클래스 이름이 Like라서 JPQL에서 like 키워드랑 헷갈림 방지
 @Table(name = "likes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like {
